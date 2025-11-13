@@ -1,13 +1,13 @@
 //
-//  SafariProUITests.swift
-//  SafariProUITests
+//  LocalHostViewPakUITests.swift
+//  LocalHostViewPakUITests
 //
 //  Created by Dennis Stewart Jr. on 11/13/25.
 //
 
 import XCTest
 
-final class SafariProUITests: XCTestCase {
+final class LocalHostViewPakUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

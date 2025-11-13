@@ -1,13 +1,13 @@
 //
-//  SafariProUITestsLaunchTests.swift
-//  SafariProUITests
+//  LocalHostViewPakUITestsLaunchTests.swift
+//  LocalHostViewPakUITests
 //
 //  Created by Dennis Stewart Jr. on 11/13/25.
 //
 
 import XCTest
 
-final class SafariProUITestsLaunchTests: XCTestCase {
+final class LocalHostViewPakUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
