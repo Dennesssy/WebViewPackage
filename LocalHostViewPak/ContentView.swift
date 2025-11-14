@@ -1,12 +1,6 @@
-//
-//  ContentView.swift
-//  LocalHostViewPak
-//
-//  Created by Dennis Stewart Jr. on 11/13/25.
-//
-
 import SwiftUI
 import WebKit
+import AppKit          // ← add this line
 
 // MARK: - SwiftUI App Entry Point
 @main
@@ -22,29 +16,51 @@ struct LocalHostViewPakApp: App {
 struct ContentView: View {
     @State private var urlString: String = "https://www.apple.com"
     @State private var webView = WKWebView()          // persistent instance
+    @State private var canGoBack = false              // navigation flags
+    @State private var canGoForward = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            // ---- URL Bar -------------------------------------------------
-            HStack {
-                TextField("Enter URL", text: $urlString, onCommit: loadCurrentURL)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+        ZStack(alignment: .top) {
+            // Background to keep window opaque when glass is transparent
+            Color.clear
+                .ignoresSafeArea()
 
-                Button(action: loadCurrentURL) {
-                    Image(systemName: "arrow.right.circle.fill")
-                        .font(.title2)
+            VStack(spacing: 0) {
+                // ---- URL Bar -------------------------------------------------
+                HStack {
+                    TextField("Enter URL", text: $urlString, onCommit: loadCurrentURL)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                    Button(action: loadCurrentURL) {
+                        Image(systemName: "arrow.right.circle.fill")
+                            .font(.title2)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .accessibilityLabel("Load URL")
                 }
-                .buttonStyle(PlainButtonStyle())
-                .accessibilityLabel("Load URL")
-            }
-            .padding()
+                .padding(.top, 44)   // push content below the glass bar
+                .padding()
 
-            // ---- WebView -------------------------------------------------
-            WebView(webView: webView, urlString: $urlString)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)   // fill remaining space
+                // ---- WebView -------------------------------------------------
+                WebView(
+                    webView: webView,
+                    urlString: $urlString,
+                    updateNavigationState: { updateNavigationState() }
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            // Glass navigation bar (always on top)
+            GlassBar(
+                canGoBack: $canGoBack,
+                canGoForward: $canGoForward,
+                backAction: goBack,
+                forwardAction: goForward
+            )
         }
     }
 
+    // MARK: - URL handling
     private func loadCurrentURL() {
         // Normalise the string – add scheme if missing
         var formatted = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -58,12 +74,82 @@ struct ContentView: View {
             webView.load(URLRequest(url: url))
         }
     }
+
+    // MARK: - Navigation state helpers
+    private func updateNavigationState() {
+        canGoBack = webView.canGoBack
+        canGoForward = webView.canGoForward
+    }
+
+    private func goBack() {
+        if webView.canGoBack { webView.goBack() }
+        updateNavigationState()
+    }
+
+    private func goForward() {
+        if webView.canGoForward { webView.goForward() }
+        updateNavigationState()
+    }
+}
+
+// MARK: - Glass navigation bar (liquid UI)
+struct GlassBar: View {
+    @Binding var canGoBack: Bool
+    @Binding var canGoForward: Bool
+    var backAction: () -> Void
+    var forwardAction: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button(action: backAction) {
+                Image(systemName: "chevron.left")
+                    .font(.title2)
+            }
+            .buttonStyle(.plain)
+            .disabled(!canGoBack)
+
+            Button(action: forwardAction) {
+                Image(systemName: "chevron.right")
+                    .font(.title2)
+            }
+            .buttonStyle(.plain)
+            .disabled(!canGoForward)
+
+            Spacer()
+        }
+        .padding(.horizontal, 12)
+        .frame(height: 44)
+        .background(
+            // macOS 12+ visual‑effect material (glass / liquid)
+            VisualEffectBlur(material: .ultraThin, blendingMode: .behindWindow)
+        )
+    }
+}
+
+// Helper for macOS visual‑effect blur (SwiftUI wrapper)
+struct VisualEffectBlur: NSViewRepresentable {
+    var material: NSVisualEffectView.Material
+    var blendingMode: NSVisualEffectView.BlendingMode
+
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = material
+        view.blendingMode = blendingMode
+        view.state = .active
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+        nsView.material = material
+        nsView.blendingMode = blendingMode
+    }
 }
 
 // MARK: - NSViewRepresentable wrapper for WKWebView
 struct WebView: NSViewRepresentable {
     let webView: WKWebView
     @Binding var urlString: String   // kept only for possible future sync (e.g., title)
+    var updateNavigationState: (() -> Void)? = nil   // optional callback
 
     func makeNSView(context: Context) -> WKWebView {
         webView.navigationDelegate = context.coordinator
@@ -93,6 +179,7 @@ struct WebView: NSViewRepresentable {
             if let url = webView.url?.absoluteString {
                 DispatchQueue.main.async {
                     self.parent.urlString = url
+                    self.parent.updateNavigationState?()   // keep navigation flags in sync
                 }
             }
         }
