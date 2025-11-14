@@ -7,5 +7,15 @@
     <true/>
     <key>com.apple.security.app-sandbox</key>
     <true/>
+
+    <!-- Allow the app to read the system networkd preferences file -->
+    <key>com.apple.security.files.readonly</key>
+    <array>
+        <string>/Library/Preferences/com.apple.networkd.plist</string>
+    </array>
+
+    <!-- Permit outbound network connections (required for WKWebView, Ollama, etc.) -->
+    <key>com.apple.security.network.client</key>
+    <true/>
 </dict>
 </plist>
