@@ -121,7 +121,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				318D47E82EC5D0A200F4A0DD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				318D47E92EC5D0A200F4A0DD /* LocalHostViewPakTest */,
@@ -144,7 +143,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				318D47F22EC5D0A200F4A0DD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				318D47F32EC5D0A200F4A0DD /* LocalHostViewPakUITests */,
@@ -474,6 +472,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LocalHostViewPak.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LocalHostViewPak";
+				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Debug;
 		};
@@ -495,6 +494,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LocalHostViewPak.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LocalHostViewPak";
+				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Release;
 		};
@@ -514,6 +514,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = SafariPro;
+				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Debug;
 		};
@@ -533,6 +534,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = SafariPro;
+				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Release;
 		};
