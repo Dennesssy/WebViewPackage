@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+        "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.yourcompany.LocalHostViewPak</string>
+    <key>CFBundleName</key>
+    <string>LocalHostViewPak</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>This app needs permission to control Safari and Chrome via AppleScript/JXA so it can open URLs, navigate back/forward, and reload pages.</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>The app uses Accessibility APIs to send AppleEvents to other apps (Safari, Chrome). This is required for the “Open in Safari” and external‑browser buttons.</string>
+    <key>NSWindowStyleMask</key>
+    <integer>15</integer>
+    <key>NSRequiresAquaSystemAppearance</key>
+    <false/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+    </dict>
+</dict>
+</plist>
