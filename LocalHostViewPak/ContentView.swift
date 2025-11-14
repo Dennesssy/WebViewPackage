@@ -1,6 +1,6 @@
 import SwiftUI
 import WebKit
-import AppKit          // ← add this line
+import AppKit
 
 // MARK: - SwiftUI App Entry Point
 @main
@@ -55,7 +55,8 @@ struct ContentView: View {
                 canGoBack: $canGoBack,
                 canGoForward: $canGoForward,
                 backAction: goBack,
-                forwardAction: goForward
+                forwardAction: goForward,
+                reloadAction: { webView.reload() }   // new reload closure
             )
         }
     }
@@ -98,6 +99,7 @@ struct GlassBar: View {
     @Binding var canGoForward: Bool
     var backAction: () -> Void
     var forwardAction: () -> Void
+    var reloadAction: () -> Void   // new closure
 
     var body: some View {
         HStack(spacing: 12) {
@@ -114,6 +116,12 @@ struct GlassBar: View {
             }
             .buttonStyle(.plain)
             .disabled(!canGoForward)
+
+            Button(action: reloadAction) {
+                Image(systemName: "arrow.clockwise")
+                    .font(.title2)
+            }
+            .buttonStyle(.plain)
 
             Spacer()
         }
