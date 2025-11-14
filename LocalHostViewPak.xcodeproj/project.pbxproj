@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 // !$*UTF8*$!
 {
 	archiveVersion = 1;
@@ -27,6 +28,9 @@
 		318D47D92EC5D09F00F4A0DD /* LocalHostViewPak.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalHostViewPak.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		318D47E62EC5D0A200F4A0DD /* LocalHostViewPakTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalHostViewPakTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		318D47F02EC5D0A200F4A0DD /* LocalHostViewPakUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalHostViewPakUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		318D47G52EC5D09F00F4A0DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = LocalHostViewPak/ContentView.swift; sourceTree = "<group>"; };
+		318D47H52EC5D09F00F4A0DD /* AccessibilityHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccessibilityHelper.swift; path = LocalHostViewPak/AccessibilityHelper.swift; sourceTree = "<group>"; };
+		318D47I52EC5D09F00F4A0DD /* AutomationRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutomationRunner.swift; path = LocalHostViewPak/AutomationRunner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -78,6 +82,9 @@
 				318D47DB2EC5D09F00F4A0DD /* LocalHostViewPak */,
 				318D47E92EC5D0A200F4A0DD /* LocalHostViewPakTest */,
 				318D47F32EC5D0A200F4A0DD /* LocalHostViewPakUITests */,
+				318D47G52EC5D09F00F4A0DD /* ContentView.swift */,
+				318D47H52EC5D09F00F4A0DD /* AccessibilityHelper.swift */,
+				318D47I52EC5D09F00F4A0DD /* AutomationRunner.swift */,
 				318D47DA2EC5D09F00F4A0DD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,7 +120,7 @@
 			name = LocalHostViewPak;
 			packageProductDependencies = (
 			);
-			productName = SafariPro;
+			productName = LocalHostViewPak;
 			productReference = 318D47D92EC5D09F00F4A0DD /* LocalHostViewPak.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -136,7 +143,7 @@
 			name = LocalHostViewPakTests;
 			packageProductDependencies = (
 			);
-			productName = SafariProTests;
+			productName = LocalHostViewPakTests;
 			productReference = 318D47E62EC5D0A200F4A0DD /* LocalHostViewPakTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -159,7 +166,7 @@
 			name = LocalHostViewPakUITests;
 			packageProductDependencies = (
 			);
-			productName = SafariProUITests;
+			productName = LocalHostViewPakUITests;
 			productReference = 318D47F02EC5D0A200F4A0DD /* LocalHostViewPakUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -196,7 +203,7 @@
 			mainGroup = 318D47D02EC5D09F00F4A0DD;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 318D47DA2EC5D09F00F4A0DD /* Products */;
+			productRefGroup = 318D47DA2EC5D0A200F4A0DD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -236,6 +243,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				318D47G52EC5D09F00F4A0DD /* ContentView.swift */,
+				318D47H52EC5D09F00F4A0DD /* AccessibilityHelper.swift */,
+				318D47I52EC5D09F00F4A0DD /* AutomationRunner.swift */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,13 +333,15 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.1;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.LocalHostViewPak;
 			};
 			name = Debug;
 		};
@@ -381,11 +393,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.1;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.LocalHostViewPak;
 			};
 			name = Release;
 		};
