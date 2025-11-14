@@ -252,16 +252,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		318D47E82EC5D0A200F4A0DD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 318D47D82EC5D09F00F4A0DD /* LocalHostViewPak */;
-			targetProxy = 318D47E72EC5D0A200F4A0DD /* PBXContainerItemProxy */;
-		};
-		318D47F22EC5D0A200F4A0DD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 318D47D82EC5D09F00F4A0DD /* LocalHostViewPak */;
-			targetProxy = 318D47F12EC5D0A200F4A0DD /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
