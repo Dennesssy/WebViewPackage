@@ -38,7 +38,7 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 // ---- URL Bar -------------------------------------------------
                 HStack {
-                    TextField("Enter URL", text: $urlString, onCommit: loadCurrentURL)
+                    TextField("Go to a site…", text: $urlString, onCommit: loadCurrentURL)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
 
                     Button(action: loadCurrentURL) {
@@ -231,7 +231,7 @@ struct ChatOverlay: View {
                 Divider()
 
                 HStack {
-                    TextField("Ask the LLM…", text: $prompt, onCommit: send)
+                    TextField("Ask me something…", text: $prompt, onCommit: send)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     Button(action: send) {
                         Image(systemName: "paperplane.fill")
