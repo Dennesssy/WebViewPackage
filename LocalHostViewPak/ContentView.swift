@@ -80,24 +80,30 @@ struct ContentView: View {
                 externalBack: {
                     Task {
                         do { try SafariAutomation.goBack() }
-                        catch { print("❗️ Safari back error:", $0) }
+                        catch { showAutomationError($0) }
                     }
                 },
                 externalForward: {
                     Task {
                         do { try SafariAutomation.goForward() }
-                        catch { print("❗️ Safari forward error:", $0) }
+                        catch { showAutomationError($0) }
                     }
                 },
                 externalReload: {
                     Task {
                         do { try SafariAutomation.reload() }
-                        catch { print("❗️ Safari reload error:", $0) }
+                        catch { showAutomationError($0) }
                     }
                 }
             )
         }
         .animation(.easeInOut(duration: 0.2), value: showChat)   // NEW
+        .onAppear {
+            // Re‑validate Accessibility permission each time the view appears
+            if !AccessibilityHelper.isTrusted {
+                AccessibilityHelper.ensurePermission()
+            }
+        }
 
         // ----- CHAT OVERLAY -----
         if showChat {
@@ -146,7 +152,7 @@ struct ContentView: View {
             do {
                 try SafariAutomation.open(url: urlString)
             } catch {
-                print("❗️ Safari open error:", error)
+                showAutomationError(error)
             }
         }
     }
@@ -294,6 +300,7 @@ struct ChatOverlay: View {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = body
+        request.timeoutInterval = 5   // seconds – fail fast if Ollama isn’t reachable
 
         // Fire‑and‑forget async request
         Task {
@@ -351,6 +358,7 @@ struct GlassBar: View {
             }
             .buttonStyle(.plain)
             .disabled(!canGoBack)
+            .accessibilityLabel("Back")
 
             Button(action: forwardAction) {
                 Image(systemName: "chevron.right")
@@ -358,12 +366,14 @@ struct GlassBar: View {
             }
             .buttonStyle(.plain)
             .disabled(!canGoForward)
+            .accessibilityLabel("Forward")
 
             Button(action: reloadAction) {
                 Image(systemName: "arrow.clockwise")
                     .font(.title2)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Reload")
 
             // ----- NEW CHAT BUTTON -----
             Button(action: chatToggle) {
@@ -371,6 +381,7 @@ struct GlassBar: View {
                     .font(.title2)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Chat")
 
             // ----- NEW EXTERNAL BROWSER BUTTONS (optional) -----
             if let extBack = externalBack {
@@ -379,6 +390,7 @@ struct GlassBar: View {
                         .font(.title2)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("External Back")
             }
             if let extFwd = externalForward {
                 Button(action: extFwd) {
@@ -386,6 +398,7 @@ struct GlassBar: View {
                         .font(.title2)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("External Forward")
             }
             if let extReload = externalReload {
                 Button(action: extReload) {
@@ -393,6 +406,7 @@ struct GlassBar: View {
                         .font(.title2)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("External Reload")
             }
 
             Spacer()
@@ -473,3 +487,14 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 #endif
+
+// MARK: - Simple error alert for automation failures
+private func showAutomationError(_ error: Error) {
+    DispatchQueue.main.async {
+        let alert = NSAlert()
+        alert.messageText = "Automation Error"
+        alert.informativeText = error.localizedDescription
+        alert.alertStyle = .warning
+        alert.runModal()
+    }
+}
