@@ -19,6 +19,12 @@ struct ContentView: View {
     @State private var canGoBack = false              // navigation flags
     @State private var canGoForward = false
 
+    // ---- NEW ----
+    @State private var showChat = false               // toggles the overlay
+    @State private var chatMessages: [ChatMessage] = [] // conversation history
+    @State private var pendingPrompt = ""             // text field binding
+    // ---- END NEW ----
+
     var body: some View {
         ZStack(alignment: .top) {
             // Background to keep window opaque when glass is transparent
@@ -56,8 +62,19 @@ struct ContentView: View {
                 canGoForward: $canGoForward,
                 backAction: goBack,
                 forwardAction: goForward,
-                reloadAction: { webView.reload() }   // new reload closure
+                reloadAction: { webView.reload() },
+                chatToggle: { showChat.toggle() }   // NEW
             )
+        }
+        .animation(.easeInOut(duration: 0.2), value: showChat)   // NEW
+
+        // ----- CHAT OVERLAY -----
+        if showChat {
+            ChatOverlay(isPresented: $showChat,
+                        messages: $chatMessages,
+                        prompt: $pendingPrompt)
+                .transition(.opacity.combined(with: .scale))
+                .zIndex(100)   // ensure it sits above everything
         }
     }
 
@@ -93,13 +110,151 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Simple chat model
+struct ChatMessage: Identifiable {
+    enum Role { case user, assistant }
+    let id = UUID()
+    let role: Role
+    let content: String
+}
+
+// MARK: - Transparent chat overlay
+struct ChatOverlay: View {
+    @Binding var isPresented: Bool
+    @Binding var messages: [ChatMessage]
+    @Binding var prompt: String
+
+    var body: some View {
+        ZStack {
+            // Dimmed background – tap to dismiss
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+                .onTapGesture { isPresented = false }
+
+            // Glass‑like chat window
+            VStack(spacing: 0) {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 8) {
+                        ForEach(messages) { msg in
+                            HStack {
+                                if msg.role == .assistant {
+                                    Image(systemName: "cpu")
+                                        .foregroundColor(.green)
+                                } else {
+                                    Image(systemName: "person")
+                                        .foregroundColor(.blue)
+                                }
+                                Text(msg.content)
+                                    .foregroundColor(.primary)
+                                    .multilineTextAlignment(.leading)
+                            }
+                            .padding(6)
+                            .background(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(Color.white.opacity(0.2))
+                            )
+                        }
+                    }
+                    .padding()
+                }
+                .frame(maxHeight: 300)
+
+                Divider()
+
+                HStack {
+                    TextField("Ask the LLM…", text: $prompt, onCommit: send)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Button(action: send) {
+                        Image(systemName: "paperplane.fill")
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding()
+            }
+            .frame(width: 500, maxHeight: .infinity, alignment: .top)
+            .background(
+                VisualEffectBlur(material: .ultraThin, blendingMode: .behindWindow)
+                    .cornerRadius(12)
+            )
+            .padding(.top, 80) // leave room for the glass bar
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Send the current prompt to the LLM (Ollama on 127.0.0.1:11434)
+    // -----------------------------------------------------------------
+    private func send() {
+        let trimmed = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        // Append user message locally
+        messages.append(ChatMessage(role: .user, content: trimmed))
+        prompt = ""
+
+        // Build request payload – you can change the model name if you wish
+        let payload: [String: Any] = [
+            "model": "llama3.2",                     // <-- pick a model that supports tool calls
+            "messages": messages.map { ["role": $0.role == .user ? "user" : "assistant",
+                                        "content": $0.content] },
+            // OPTIONAL: expose a tool that can manipulate JSX/DOM
+            "tools": [
+                [
+                    "type": "function",
+                    "function": [
+                        "name": "jsx_dom",
+                        "description": "Interact with a JSX DOM (create, update, query).",
+                        "parameters": [
+                            "type": "object",
+                            "properties": [
+                                "action": ["type": "string", "enum": ["create","update","query"]],
+                                "selector": ["type": "string"],
+                                "jsx": ["type": "string"]
+                            ],
+                            "required": ["action"]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+        guard let url = URL(string: "http://127.0.0.1:11434/api/chat"),
+              let body = try? JSONSerialization.data(withJSONObject: payload) else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = body
+
+        // Fire‑and‑forget async request
+        Task {
+            do {
+                let (data, _) = try await URLSession.shared.data(for: request)
+                // Ollama returns a stream of JSON objects; we just decode the last one
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let message = json["message"] as? [String: Any],
+                   let content = message["content"] as? String {
+                    await MainActor.run {
+                        messages.append(ChatMessage(role: .assistant, content: content))
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    messages.append(ChatMessage(role: .assistant,
+                                                content: "❗️ Error: \(error.localizedDescription)"))
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Glass navigation bar (liquid UI)
 struct GlassBar: View {
     @Binding var canGoBack: Bool
     @Binding var canGoForward: Bool
     var backAction: () -> Void
     var forwardAction: () -> Void
-    var reloadAction: () -> Void   // new closure
+    var reloadAction: () -> Void
+    var chatToggle: () -> Void          // NEW
 
     var body: some View {
         HStack(spacing: 12) {
@@ -119,6 +274,13 @@ struct GlassBar: View {
 
             Button(action: reloadAction) {
                 Image(systemName: "arrow.clockwise")
+                    .font(.title2)
+            }
+            .buttonStyle(.plain)
+
+            // ----- NEW CHAT BUTTON -----
+            Button(action: chatToggle) {
+                Image(systemName: "bubble.left.and.bubble.right")
                     .font(.title2)
             }
             .buttonStyle(.plain)
