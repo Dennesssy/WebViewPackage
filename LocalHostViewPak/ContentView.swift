@@ -5,6 +5,10 @@ import AppKit
 // MARK: - SwiftUI App Entry Point
 @main
 struct LocalHostViewPakApp: App {
+    init() {
+        // Prompt user for Accessibility permission if not already granted
+        AccessibilityHelper.ensurePermission()
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -43,6 +47,14 @@ struct ContentView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                     .accessibilityLabel("Load URL")
+
+                    // NEW – open current URL in Safari
+                    Button(action: openInSafari) {
+                        Image(systemName: "safari")
+                            .font(.title2)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .accessibilityLabel("Open in Safari")
                 }
                 .padding(.top, 44)   // push content below the glass bar
                 .padding()
@@ -63,7 +75,26 @@ struct ContentView: View {
                 backAction: goBack,
                 forwardAction: goForward,
                 reloadAction: { webView.reload() },
-                chatToggle: { showChat.toggle() }   // NEW
+                chatToggle: { showChat.toggle() },   // NEW
+                // EXTERNAL‑BROWSER ACTIONS
+                externalBack: {
+                    Task {
+                        do { try SafariAutomation.goBack() }
+                        catch { print("❗️ Safari back error:", $0) }
+                    }
+                },
+                externalForward: {
+                    Task {
+                        do { try SafariAutomation.goForward() }
+                        catch { print("❗️ Safari forward error:", $0) }
+                    }
+                },
+                externalReload: {
+                    Task {
+                        do { try SafariAutomation.reload() }
+                        catch { print("❗️ Safari reload error:", $0) }
+                    }
+                }
             )
         }
         .animation(.easeInOut(duration: 0.2), value: showChat)   // NEW
@@ -107,6 +138,17 @@ struct ContentView: View {
     private func goForward() {
         if webView.canGoForward { webView.goForward() }
         updateNavigationState()
+    }
+
+    // MARK: - External browser helpers
+    private func openInSafari() {
+        Task {
+            do {
+                try SafariAutomation.open(url: urlString)
+            } catch {
+                print("❗️ Safari open error:", error)
+            }
+        }
     }
 }
 
@@ -254,7 +296,12 @@ struct GlassBar: View {
     var backAction: () -> Void
     var forwardAction: () -> Void
     var reloadAction: () -> Void
-    var chatToggle: () -> Void          // NEW
+    var chatToggle: () -> Void
+
+    // NEW – external‑browser actions (optional)
+    var externalBack: (() -> Void)? = nil
+    var externalForward: (() -> Void)? = nil
+    var externalReload: (() -> Void)? = nil
 
     var body: some View {
         HStack(spacing: 12) {
@@ -284,6 +331,29 @@ struct GlassBar: View {
                     .font(.title2)
             }
             .buttonStyle(.plain)
+
+            // ----- NEW EXTERNAL BROWSER BUTTONS (optional) -----
+            if let extBack = externalBack {
+                Button(action: extBack) {
+                    Image(systemName: "arrow.left.square")
+                        .font(.title2)
+                }
+                .buttonStyle(.plain)
+            }
+            if let extFwd = externalForward {
+                Button(action: extFwd) {
+                    Image(systemName: "arrow.right.square")
+                        .font(.title2)
+                }
+                .buttonStyle(.plain)
+            }
+            if let extReload = externalReload {
+                Button(action: extReload) {
+                    Image(systemName: "arrow.clockwise.square")
+                        .font(.title2)
+                }
+                .buttonStyle(.plain)
+            }
 
             Spacer()
         }
