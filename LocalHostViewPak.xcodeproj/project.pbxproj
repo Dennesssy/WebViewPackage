@@ -8,20 +8,6 @@
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
-		318D47E72EC5D0A200F4A0DD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 318D47D12EC5D09F00F4A0DD /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 318D47D82EC5D09F00F4A0DD;
-			remoteInfo = SafariPro;
-		};
-		318D47F12EC5D0A200F4A0DD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 318D47D12EC5D09F00F4A0DD /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 318D47D82EC5D09F00F4A0DD;
-			remoteInfo = SafariPro;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
