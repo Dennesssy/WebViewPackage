@@ -160,6 +160,33 @@ struct ChatMessage: Identifiable {
     let content: String
 }
 
+// MARK: - Ollama chat response model
+private struct OllamaChatResponse: Decodable {
+    struct Message: Decodable {
+        let role: String
+        let content: String
+    }
+    let message: Message
+    let tool_calls: [ToolCall]?
+
+    struct ToolCall: Decodable {
+        let id: String
+        let type: String
+        let function: FunctionCall
+
+        struct FunctionCall: Decodable {
+            let name: String
+            let arguments: String
+        }
+    }
+}
+
+private struct JSXDomArgs: Decodable {
+    let action: String
+    let selector: String?
+    let jsx: String?
+}
+
 // MARK: - Transparent chat overlay
 struct ChatOverlay: View {
     @Binding var isPresented: Bool
@@ -235,7 +262,8 @@ struct ChatOverlay: View {
 
         // Build request payload – you can change the model name if you wish
         let payload: [String: Any] = [
-            "model": "llama3.2",                     // <-- pick a model that supports tool calls
+            "model": "llama3.2",
+            "stream": false,                     // ← NEW
             "messages": messages.map { ["role": $0.role == .user ? "user" : "assistant",
                                         "content": $0.content] },
             // OPTIONAL: expose a tool that can manipulate JSX/DOM
@@ -271,14 +299,26 @@ struct ChatOverlay: View {
         Task {
             do {
                 let (data, _) = try await URLSession.shared.data(for: request)
-                // Ollama returns a stream of JSON objects; we just decode the last one
-                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let message = json["message"] as? [String: Any],
-                   let content = message["content"] as? String {
-                    await MainActor.run {
-                        messages.append(ChatMessage(role: .assistant, content: content))
-                    }
+                // Decode the *single* JSON object returned by Ollama
+                let response = try JSONDecoder().decode(OllamaChatResponse.self, from: data)
+
+                // Normal assistant reply
+                await MainActor.run {
+                    messages.append(ChatMessage(role: .assistant,
+                                                content: response.message.content))
                 }
+
+                // OPTIONAL: handle a tool call (e.g., jsx_dom)
+                if let tool = response.tool_calls?.first,
+                   tool.type == "function",
+                   tool.function.name == "jsx_dom" {
+                    // `tool.function.arguments` is a JSON string – decode it if you need it
+                    // Example:
+                    // let args = try JSONDecoder().decode(JSXDomArgs.self,
+                    //                                      from: Data(tool.function.arguments.utf8))
+                    // …perform the requested DOM manipulation…
+                }
+
             } catch {
                 await MainActor.run {
                     messages.append(ChatMessage(role: .assistant,
