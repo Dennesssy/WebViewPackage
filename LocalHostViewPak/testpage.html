@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude's Test Page</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .status {
+            background: rgba(76, 175, 80, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        #currentTime {
+            font-size: 1.2em;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Claude's Control Interface</h1>
+
+        <div class="info">
+            <h2>LocalHostViewPak - Claude Controlled</h2>
+            <p>This HTML page is being served through the LocalHostViewPak app that Claude can control and read.</p>
+        </div>
+
+        <div class="status">
+            <h3>✅ API Status: Online</h3>
+            <p>Listening on: <strong>http://localhost:8080</strong></p>
+            <p>Current Page: <strong id="currentUrl">Loading...</strong></p>
+        </div>
+
+        <div class="controls">
+            <button onclick="checkAPI()">🔍 Test API Connection</button>
+            <button onclick="getPageSource()">📄 Get Page Source</button>
+            <button onclick="navigateToGoogle()">🌐 Navigate to Google</button>
+            <button onclick="openSafari()">🦁 Open in Safari</button>
+        </div>
+
+        <div id="currentTime"></div>
+        <div id="output" style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 20px; min-height: 100px;">
+            <strong>API Output:</strong><br>
+            <em>Click buttons above to see results...</em>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            document.getElementById('currentTime').innerHTML =
+                '🕐 Current Time: ' + new Date().toLocaleString();
+        }
+
+        function updateCurrentUrl() {
+            fetch('http://localhost:8080/current')
+                .then(response => response.text())
+                .then(url => {
+                    document.getElementById('currentUrl').textContent = url || 'No URL loaded';
+                })
+                .catch(error => {
+                    document.getElementById('currentUrl').textContent = 'API Error: ' + error.message;
+                });
+        }
+
+        function checkAPI() {
+            fetch('http://localhost:8080/health')
+                .then(response => response.text())
+                .then(data => {
+                    updateOutput('✅ API Health: ' + data);
+                })
+                .catch(error => {
+                    updateOutput('❌ API Error: ' + error.message);
+                });
+        }
+
+        function getPageSource() {
+            fetch('http://localhost:8080/source')
+                .then(response => response.text())
+                .then(source => {
+                    updateOutput('📄 Page Source (first 500 chars):<br>' +
+                              '<pre style="max-height: 200px; overflow-y: auto;">' +
+                              escapeHtml(source.substring(0, 500)) + '...</pre>');
+                })
+                .catch(error => {
+                    updateOutput('❌ Error getting source: ' + error.message);
+                });
+        }
+
+        function navigateToGoogle() {
+            fetch('http://localhost:8080/navigate?url=https://google.com')
+                .then(response => response.text())
+                .then(data => {
+                    updateOutput('🌐 Navigation: ' + data);
+                    setTimeout(updateCurrentUrl, 2000);
+                })
+                .catch(error => {
+                    updateOutput('❌ Navigation error: ' + error.message);
+                });
+        }
+
+        function openSafari() {
+            fetch('http://localhost:8080/safari/open?url=https://claude.ai')
+                .then(response => response.text())
+                .then(data => {
+                    updateOutput('🦁 Safari: ' + data);
+                })
+                .catch(error => {
+                    updateOutput('❌ Safari error: ' + error.message);
+                });
+        }
+
+        function updateOutput(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            document.getElementById('output').innerHTML =
+                '<strong>API Output [' + timestamp + ']:</strong><br>' + message;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        updateClock();
+        setInterval(updateClock, 1000);
+        updateCurrentUrl();
+        setInterval(updateCurrentUrl, 5000);
+    </script>
+</body>
+</html>

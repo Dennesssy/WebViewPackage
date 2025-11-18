@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 // !$*UTF8*$!
 {
 	archiveVersion = 1;
@@ -8,15 +7,26 @@
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
+		318D47E72EC5D0A200F4A0DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 318D47D12EC5D09F00F4A0DD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 318D47D82EC5D09F00F4A0DD;
+			remoteInfo = SafariPro;
+		};
+		318D47F12EC5D0A200F4A0DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 318D47D12EC5D09F00F4A0DD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 318D47D82EC5D09F00F4A0DD;
+			remoteInfo = SafariPro;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		318D47D92EC5D09F00F4A0DD /* LocalHostViewPak.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalHostViewPak.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		318D47E62EC5D0A200F4A0DD /* LocalHostViewPakTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalHostViewPakTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		318D47F02EC5D0A200F4A0DD /* LocalHostViewPakUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalHostViewPakUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		318D47G52EC5D09F00F4A0DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = LocalHostViewPak/ContentView.swift; sourceTree = "<group>"; };
-		318D47H52EC5D09F00F4A0DD /* AccessibilityHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccessibilityHelper.swift; path = LocalHostViewPak/AccessibilityHelper.swift; sourceTree = "<group>"; };
-		318D47I52EC5D09F00F4A0DD /* AutomationRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutomationRunner.swift; path = LocalHostViewPak/AutomationRunner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -68,9 +78,6 @@
 				318D47DB2EC5D09F00F4A0DD /* LocalHostViewPak */,
 				318D47E92EC5D0A200F4A0DD /* LocalHostViewPakTest */,
 				318D47F32EC5D0A200F4A0DD /* LocalHostViewPakUITests */,
-				318D47G52EC5D09F00F4A0DD /* ContentView.swift */,
-				318D47H52EC5D09F00F4A0DD /* AccessibilityHelper.swift */,
-				318D47I52EC5D09F00F4A0DD /* AutomationRunner.swift */,
 				318D47DA2EC5D09F00F4A0DD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -106,7 +113,7 @@
 			name = LocalHostViewPak;
 			packageProductDependencies = (
 			);
-			productName = LocalHostViewPak;
+			productName = SafariPro;
 			productReference = 318D47D92EC5D09F00F4A0DD /* LocalHostViewPak.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -121,6 +128,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				318D47E82EC5D0A200F4A0DD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				318D47E92EC5D0A200F4A0DD /* LocalHostViewPakTest */,
@@ -128,7 +136,7 @@
 			name = LocalHostViewPakTests;
 			packageProductDependencies = (
 			);
-			productName = LocalHostViewPakTests;
+			productName = SafariProTests;
 			productReference = 318D47E62EC5D0A200F4A0DD /* LocalHostViewPakTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -143,6 +151,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				318D47F22EC5D0A200F4A0DD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				318D47F32EC5D0A200F4A0DD /* LocalHostViewPakUITests */,
@@ -150,7 +159,7 @@
 			name = LocalHostViewPakUITests;
 			packageProductDependencies = (
 			);
-			productName = LocalHostViewPakUITests;
+			productName = SafariProUITests;
 			productReference = 318D47F02EC5D0A200F4A0DD /* LocalHostViewPakUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -187,7 +196,7 @@
 			mainGroup = 318D47D02EC5D09F00F4A0DD;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 318D47DA2EC5D0A200F4A0DD /* Products */;
+			productRefGroup = 318D47DA2EC5D09F00F4A0DD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -227,9 +236,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				318D47G52EC5D09F00F4A0DD /* ContentView.swift */,
-				318D47H52EC5D09F00F4A0DD /* AccessibilityHelper.swift */,
-				318D47I52EC5D09F00F4A0DD /* AutomationRunner.swift */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +256,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		318D47E82EC5D0A200F4A0DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 318D47D82EC5D09F00F4A0DD /* LocalHostViewPak */;
+			targetProxy = 318D47E72EC5D0A200F4A0DD /* PBXContainerItemProxy */;
+		};
+		318D47F22EC5D0A200F4A0DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 318D47D82EC5D09F00F4A0DD /* LocalHostViewPak */;
+			targetProxy = 318D47F12EC5D0A200F4A0DD /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -307,16 +323,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.LocalHostViewPak;
-				SWIFT_VERSION = 5.7;
 			};
 			name = Debug;
 		};
@@ -359,14 +372,20 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.LocalHostViewPak;
-				SWIFT_VERSION = 5.7;
 			};
 			name = Release;
 		};
@@ -472,7 +491,6 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LocalHostViewPak.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LocalHostViewPak";
-				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Debug;
 		};
@@ -494,7 +512,6 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LocalHostViewPak.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LocalHostViewPak";
-				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Release;
 		};
@@ -514,7 +531,6 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = SafariPro;
-				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Debug;
 		};
@@ -534,7 +550,6 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = SafariPro;
-				CODE_SIGN_ENTITLEMENTS = LocalHostViewPak.entitlements;
 			};
 			name = Release;
 		};

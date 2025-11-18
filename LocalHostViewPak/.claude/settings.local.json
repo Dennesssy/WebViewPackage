@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcodebuild:*)",
+      "Bash(pkill:*)",
+      "Bash(open:*)",
+      "Bash(curl:*)",
+      "Bash(/dev/null:*)",
+      "Bash(sqlite3:*)",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

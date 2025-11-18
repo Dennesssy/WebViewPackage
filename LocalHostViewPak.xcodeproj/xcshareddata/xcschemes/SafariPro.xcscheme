@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "318D47D82EC5D09F00F4A0DD"
-               BuildableName = "SafariPro.app"
-               BlueprintName = "SafariPro"
-               ReferencedContainer = "container:SafariPro.xcodeproj">
+               BuildableName = "LocalHostViewPak.app"
+               BlueprintName = "LocalHostViewPak"
+               ReferencedContainer = "container:LocalHostViewPak.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "318D47E52EC5D0A200F4A0DD"
-               BuildableName = "SafariProTests.xctest"
-               BlueprintName = "SafariProTests"
-               ReferencedContainer = "container:SafariPro.xcodeproj">
+               BuildableName = "LocalHostViewPakTests.xctest"
+               BlueprintName = "LocalHostViewPakTests"
+               ReferencedContainer = "container:LocalHostViewPak.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "318D47EF2EC5D0A200F4A0DD"
-               BuildableName = "SafariProUITests.xctest"
-               BlueprintName = "SafariProUITests"
-               ReferencedContainer = "container:SafariPro.xcodeproj">
+               BuildableName = "LocalHostViewPakUITests.xctest"
+               BlueprintName = "LocalHostViewPakUITests"
+               ReferencedContainer = "container:LocalHostViewPak.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "318D47D82EC5D09F00F4A0DD"
-            BuildableName = "SafariPro.app"
-            BlueprintName = "SafariPro"
-            ReferencedContainer = "container:SafariPro.xcodeproj">
+            BuildableName = "LocalHostViewPak.app"
+            BlueprintName = "LocalHostViewPak"
+            ReferencedContainer = "container:LocalHostViewPak.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -86,9 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "318D47D82EC5D09F00F4A0DD"
-            BuildableName = "SafariPro.app"
-            BlueprintName = "SafariPro"
-            ReferencedContainer = "container:SafariPro.xcodeproj">
+            BuildableName = "LocalHostViewPak.app"
+            BlueprintName = "LocalHostViewPak"
+            ReferencedContainer = "container:LocalHostViewPak.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

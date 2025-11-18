@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalHostViewPak - AI-Powered Web Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overflow-x: hidden;
+            background: #000;
+            color: #fff;
+        }
+
+        /* WebGL Shader Background */
+        #shader-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Framer Motion-style Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 4s ease infinite;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 1.2s ease-out 0.3s both;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 4s ease infinite;
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 40px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: scaleIn 1s ease-out 0.6s both, pulse 2s ease-in-out infinite 1s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out both;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .footer p {
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .features h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- WebGL Shader Canvas Background -->
+    <canvas id="shader-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">LocalHostViewPak</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>AI-Powered Web Editor</h1>
+            <p class="subtitle">Generate, edit, and export stunning web pages with intelligent automation</p>
+            <a href="#features" class="cta-button">Start Creating</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2>Powerful Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>LLM Controlled</h3>
+                <p>Full API control for AI agents to navigate, edit, and generate web content programmatically</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✏️</div>
+                <h3>Live Editing</h3>
+                <p>Edit any webpage in real-time with visual feedback and instant modifications</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3>Static Generation</h3>
+                <p>Export clean, shareable HTML pages with modern styling and professional layouts</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 LocalHostViewPak. Generated with AI-powered web editing technology.</p>
+    </footer>
+
+    <!-- WebGL Shader Script -->
+    <script>
+        const canvas = document.getElementById('shader-canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+        if (gl) {
+            // Set canvas size
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Vertex shader
+            const vertexShaderSource = `
+                attribute vec2 a_position;
+                void main() {
+                    gl_Position = vec4(a_position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment shader with animated gradient
+            const fragmentShaderSource = `
+                precision mediump float;
+                uniform float u_time;
+                uniform vec2 u_resolution;
+
+                void main() {
+                    vec2 st = gl_FragCoord.xy / u_resolution;
+
+                    // Animated gradient
+                    vec3 color1 = vec3(0.4, 0.5, 0.9); // #667eea
+                    vec3 color2 = vec3(0.46, 0.29, 0.64); // #764ba2
+                    vec3 color3 = vec3(0.94, 0.58, 0.98); // #f093fb
+                    vec3 color4 = vec3(0.96, 0.34, 0.42); // #f5576c
+
+                    float wave = sin(u_time + st.x * 3.0) * 0.5 + 0.5;
+                    float wave2 = cos(u_time * 0.7 + st.y * 2.0) * 0.5 + 0.5;
+
+                    vec3 color = mix(color1, color2, st.x);
+                    color = mix(color, color3, st.y);
+                    color = mix(color, color4, wave * wave2);
+
+                    // Add some noise for texture
+                    float noise = fract(sin(dot(st, vec2(12.9898, 78.233))) * 43758.5453);
+                    color += noise * 0.05;
+
+                    gl_FragColor = vec4(color * 0.3, 1.0); // Darker version
+                }
+            `;
+
+            // Create shaders
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+
+                return shader;
+            }
+
+            const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+            const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+            if (vertexShader && fragmentShader) {
+                // Create program
+                const program = gl.createProgram();
+                gl.attachShader(program, vertexShader);
+                gl.attachShader(program, fragmentShader);
+                gl.linkProgram(program);
+
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                    console.error('Program linking error:', gl.getProgramInfoLog(program));
+                } else {
+                    gl.useProgram(program);
+
+                    // Set up geometry (full screen quad)
+                    const positions = new Float32Array([
+                        -1, -1,
+                         1, -1,
+                        -1,  1,
+                         1,  1,
+                    ]);
+
+                    const positionBuffer = gl.createBuffer();
+                    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+                    const positionLocation = gl.getAttribLocation(program, 'a_position');
+                    gl.enableVertexAttribArray(positionLocation);
+                    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+                    // Set uniforms
+                    const timeLocation = gl.getUniformLocation(program, 'u_time');
+                    const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+
+                    // Animation loop
+                    function render(time) {
+                        gl.uniform1f(timeLocation, time * 0.001);
+                        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+
+                        gl.clearColor(0, 0, 0, 1);
+                        gl.clear(gl.COLOR_BUFFER_BIT);
+                        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+                        requestAnimationFrame(render);
+                    }
+
+                    render(0);
+                }
+            }
+        }
+    </script>
+
+    <!-- Framer Motion-style scroll animations -->
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.feature-card, .features h2, .footer');
+            animatedElements.forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
