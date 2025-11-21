@@ -22,11 +22,34 @@ struct LocalHostViewPakApp: App {
 struct ContentView: View {
     @State private var urlString: String = "https://www.apple.com"
     @State private var webView = WKWebView()          // persistent instance
+    
+    @State private var canGoBack = false
+    @State private var canGoForward = false
 
     var body: some View {
         VStack(spacing: 0) {
             // ---- URL Bar -------------------------------------------------
             HStack {
+                Button(action: goBack) {
+                    Image(systemName: "chevron.left")
+                }
+                .buttonStyle(PlainButtonStyle())
+                .disabled(!canGoBack)
+                .help("Back")
+
+                Button(action: goForward) {
+                    Image(systemName: "chevron.right")
+                }
+                .buttonStyle(PlainButtonStyle())
+                .disabled(!canGoForward)
+                .help("Forward")
+
+                Button(action: reloadPage) {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .buttonStyle(PlainButtonStyle())
+                .help("Reload")
+
                 TextField("Enter URL", text: $urlString, onCommit: loadCurrentURL)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
 
@@ -123,7 +146,7 @@ struct ContentView: View {
             .padding()
 
             // ---- WebView -------------------------------------------------
-            WebView(webView: webView, urlString: $urlString)
+            WebView(webView: webView, urlString: $urlString, canGoBack: $canGoBack, canGoForward: $canGoForward)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)   // fill remaining space
         }
     }
@@ -144,17 +167,34 @@ struct ContentView: View {
             webView.load(URLRequest(url: url))
         }
     }
+
+    private func goBack() {
+        webView.goBack()
+    }
+    private func goForward() {
+        webView.goForward()
+    }
+    private func reloadPage() {
+        webView.reload()
+    }
 }
 
 // MARK: - NSViewRepresentable wrapper for WKWebView
 struct WebView: NSViewRepresentable {
     let webView: WKWebView
     @Binding var urlString: String   // kept only for possible future sync (e.g., title)
+    @Binding var canGoBack: Bool
+    @Binding var canGoForward: Bool
 
     func makeNSView(context: Context) -> WKWebView {
         webView.navigationDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
         // Pinch‑zoom, scrolling, etc. are enabled by default.
+
+        // Update initial navigation state
+        canGoBack = webView.canGoBack
+        canGoForward = webView.canGoForward
+
         return webView
     }
 
@@ -179,6 +219,8 @@ struct WebView: NSViewRepresentable {
             if let url = webView.url?.absoluteString {
                 DispatchQueue.main.async {
                     self.parent.urlString = url
+                    self.parent.canGoBack = webView.canGoBack
+                    self.parent.canGoForward = webView.canGoForward
                 }
             }
         }
